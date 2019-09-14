@@ -10,15 +10,29 @@ import javax.swing.JButton;
 public class JogoDaVelha extends javax.swing.JFrame {
 
     private String[][] matrizJogo = new String[3][3];
-    private JogoDaVelha jogoDaVelha;
+//    private JogoDaVelha jogoDaVelha;
     private ArrayList<JButton> listaDeBotoes;
-    private int contadorJogadas = 0;
+    private int contadorJogadas = 0, controleJogador = 0;
     private boolean haVencedor = false;
     private String jogadorDaVez = "";
     
     public JogoDaVelha() {
         initComponents();
-        inicializarMatriz();
+    }
+    
+    public JogoDaVelha(String jogadorVencedor) {
+        initComponents();
+       
+       //System.out.println("Parâmetro: " + jogadorVencedor + "\n Controle jogador: " + controleJogador);
+        //this.jogadorDaVez = jogadorVencedor;
+        
+        if(jogadorVencedor == "X"){
+            
+            this.controleJogador = 0;
+        }else{
+            this.controleJogador = 1;
+        }
+        
     }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -109,7 +123,7 @@ public class JogoDaVelha extends javax.swing.JFrame {
         });
 
         lblVencedor.setFont(new java.awt.Font("Candara Light", 1, 18)); // NOI18N
-        lblVencedor.setText("O vencedor foi o jogador X.");
+        lblVencedor.setText("...");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -208,7 +222,7 @@ public class JogoDaVelha extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inicializarMatriz(){
+    private void registrarNaMatriz(){
 
         matrizJogo[0][0] = btn0x0.getText();
         matrizJogo[0][1] = btn0x1.getText();
@@ -223,42 +237,54 @@ public class JogoDaVelha extends javax.swing.JFrame {
     
     private String jogadorDaVez(){
     
-        int x = 0;
-        String[] jogadorDaVez = {"X", "0"};
-        
-        while (!haVencedor){
+        if(controleJogador == 0){
             
-            for(x=0; x<2; x++){
-                
-                System.out.println("O jogador da vez é: " + jogadorDaVez[x]);
-            }
+            jogadorDaVez = "X";
+            controleJogador = 1;
             
+        }else{
+            jogadorDaVez = "0";
+            controleJogador = 0;
         }
-        //Buscar em qual posição do vetor está o valor correspondente ao ganhador e
-        // fazer com que x seja igual a esta posição para que seja o jogador inicial.
-        //Novo jogo deve ter conhecimento de quem foi o ganhador na partida anterior.
         
-        return jogadorDaVez[x];
-    
+        return jogadorDaVez;
     }
     
     private boolean haVencedor(String jogadorDaVez){
     
-        
-        return false;
+         if(((matrizJogo[0][0] == jogadorDaVez) && (matrizJogo[0][1] == jogadorDaVez) && (matrizJogo[0][2] == jogadorDaVez))
+                 || ((matrizJogo[1][0] == jogadorDaVez) && (matrizJogo[1][1] == jogadorDaVez) && (matrizJogo[1][2] == jogadorDaVez))
+                 || ((matrizJogo[2][0] == jogadorDaVez)&& (matrizJogo[2][1] == jogadorDaVez) && (matrizJogo[2][2] == jogadorDaVez))
+                 || ((matrizJogo[0][0] == jogadorDaVez) && (matrizJogo[1][0] == jogadorDaVez) && (matrizJogo[2][0] == jogadorDaVez))
+                 || ((matrizJogo[0][1] == jogadorDaVez) && (matrizJogo[1][1] == jogadorDaVez) && (matrizJogo[2][1] == jogadorDaVez))
+                 || ((matrizJogo[0][2] == jogadorDaVez) && (matrizJogo[1][2] == jogadorDaVez) && (matrizJogo[2][2] == jogadorDaVez))
+                 || ((matrizJogo[0][0] == jogadorDaVez) && (matrizJogo[1][1] == jogadorDaVez) && (matrizJogo[2][2] == jogadorDaVez))
+                 || ((matrizJogo[2][0] == jogadorDaVez) && (matrizJogo[1][1] == jogadorDaVez) && (matrizJogo[0][2] == jogadorDaVez))){
+         
+                    haVencedor = true;
+         }else{
+             
+             haVencedor = false;
+         }
+         
+        return haVencedor;
     }
     private void registrarJogada(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarJogada
         
-        contadorJogadas++; // contadorJogadas = 5
-
-        jogadorDaVez = jogadorDaVez(); // Jogador = X
+        contadorJogadas++;
         
-        JButton botaoClicado = (JButton)evt.getSource(); //btn0x2 
+        JButton botaoClicado = (JButton)evt.getSource();
        
-        botaoClicado.setText(jogadorDaVez); //Jogada de X foi registrada
+        System.out.println("PARTE III - Parâmetro: " + jogadorDaVez + "\n Controle jogador: " + controleJogador);
+        
+        botaoClicado.setText(jogadorDaVez());
+        
+        System.out.println("PARTE IIII - Parâmetro: " + jogadorDaVez + "\n Controle jogador: " + controleJogador);      
+
+        registrarNaMatriz();
         botaoClicado.setEnabled(false); //Desabilita o botão clicado
        
-        if(contadorJogadas > 5){
+        if(contadorJogadas >= 5){
         
             haVencedor = haVencedor(jogadorDaVez);
             
@@ -266,6 +292,8 @@ public class JogoDaVelha extends javax.swing.JFrame {
 
                 lblVencedor.setText("O vencedor foi: " + jogadorDaVez);
                 manipularBotoes(false, false);
+                contadorJogadas = 0;
+                //controleJogador = 0;
             }
         }
     }//GEN-LAST:event_registrarJogada
@@ -274,7 +302,7 @@ public class JogoDaVelha extends javax.swing.JFrame {
         as jogadas, onde podem ser habilitados/desabilitados e terem seus valores
         apagados ou não. 
     */
-    private void manipularBotoes(boolean habilitar, boolean resetarBotoes){
+    private void manipularBotoes(boolean habilitar, boolean resetarBotoesELabelVencedor){
         
         if(habilitar){
             btn0x0.setEnabled(true);   
@@ -287,17 +315,6 @@ public class JogoDaVelha extends javax.swing.JFrame {
             btn2x1.setEnabled(true);
             btn2x2.setEnabled(true);
             
-            if(resetarBotoes){
-                btn0x0.setText("");
-                btn0x1.setText("");
-                btn0x2.setText("");
-                btn1x0.setText("");
-                btn1x1.setText("");
-                btn1x2.setText("");
-                btn2x0.setText("");
-                btn2x1.setText("");
-                btn2x2.setText("");
-            }
         }else{
             btn0x0.setEnabled(false);
             btn0x1.setEnabled(false);
@@ -309,6 +326,20 @@ public class JogoDaVelha extends javax.swing.JFrame {
             btn2x1.setEnabled(false);
             btn2x2.setEnabled(false);
         }
+        
+        if(resetarBotoesELabelVencedor){
+                btn0x0.setText("");
+                btn0x1.setText("");
+                btn0x2.setText("");
+                btn1x0.setText("");
+                btn1x1.setText("");
+                btn1x2.setText("");
+                btn2x0.setText("");
+                btn2x1.setText("");
+                btn2x2.setText("");
+                
+                lblVencedor.setText("");
+            }
     }
     
     /* Método responsável por iniciar um novo jogo após resetar os estados dos
@@ -327,20 +358,14 @@ public class JogoDaVelha extends javax.swing.JFrame {
             this.setVisible(true);
         }
         
-        jogoDaVelha = new JogoDaVelha(); 
+        new JogoDaVelha(jogadorDaVez); 
     }
     
     public static void main(String args[]) {
 
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JogoDaVelha().setVisible(true);
-            }
-        });*/
-        
         JogoDaVelha jogoDaVelha = new JogoDaVelha();
+       
         jogoDaVelha.novoJogo();
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

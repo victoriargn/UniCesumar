@@ -218,7 +218,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Candara Light" size="18" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="O vencedor foi o jogador X."/>
+            <Property name="text" type="java.lang.String" value="..."/>
           </Properties>
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
